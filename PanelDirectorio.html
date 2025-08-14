@@ -1,0 +1,573 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <!-- Ya no se necesita Font Awesome, los iconos están incrustados como SVG -->
+</head>
+<body>
+
+<!-- ======================================================================= -->
+<!--   PANEL DE ADMINISTRACIÓN V6.2 (CON ICONOS SVG INCRUSTADOS)           -->
+<!-- ======================================================================= -->
+
+<!-- 1. ESTILOS CSS (BLINDADOS CONTRA CONFLICTOS) -->
+<style>
+    /* --- Contenedor Principal y Reset Básico --- */
+    #admin-directorio-wrapper {
+        max-width: 1200px;
+        margin: 40px auto;
+        font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+        box-sizing: border-box;
+    }
+    #admin-directorio-wrapper *, 
+    #admin-directorio-wrapper *::before, 
+    #admin-directorio-wrapper *::after {
+        box-sizing: border-box;
+        font-family: inherit;
+    }
+    
+    /* RESET ESPECÍFICO PARA NEUTRALIZAR EL TEMA ASTRA */
+    #admin-directorio-wrapper h1, 
+    #admin-directorio-wrapper h2, 
+    #admin-directorio-wrapper h3, 
+    #admin-directorio-wrapper p, 
+    #admin-directorio-wrapper label,
+    #admin-directorio-wrapper th,
+    #admin-directorio-wrapper td,
+    #admin-directorio-wrapper button,
+    #admin-directorio-wrapper input {
+        margin: 0; padding: 0; line-height: 1.6; font-weight: normal;
+        font-size: inherit; /* Hereda el tamaño de fuente base */
+        color: inherit; /* Hereda el color de texto base */
+        background: none;
+        border: none;
+    }
+    #admin-directorio-wrapper input {
+        line-height: normal; /* Restaura el line-height para inputs */
+    }
+    #admin-directorio-wrapper h1, #admin-directorio-wrapper h2 {
+        color: #005b96;
+        font-weight: 700;
+    }
+    /* FIN DEL RESET */
+
+
+    /* --- Vista de Login --- */
+    #admin-directorio-wrapper #admin-login-view {
+        max-width: 420px; margin: 60px auto; padding: 40px; background: #ffffff;
+        border-radius: 12px; box-shadow: 0 8px 30px rgba(0, 0, 0, 0.08); text-align: center;
+    }
+    #admin-directorio-wrapper #admin-login-view h2 {
+        font-size: 2em; margin-bottom: 15px; display: flex; align-items: center; justify-content: center; gap: 10px;
+    }
+    #admin-directorio-wrapper #admin-login-view p {
+        margin-bottom: 30px; color: #7f8c8d;
+    }
+    #admin-directorio-wrapper .login-form-group {
+        margin-bottom: 20px; text-align: left;
+    }
+    #admin-directorio-wrapper .login-form-group label {
+        display: block; margin-bottom: 8px; font-weight: 600; color: #34495e;
+    }
+
+    /* --- Panel de Administración --- */
+    #admin-directorio-wrapper #admin-content-view {
+        background: #ffffff; padding: 30px; border-radius: 12px; box-shadow: 0 8px 30px rgba(0, 0, 0, 0.08);
+    }
+    #admin-directorio-wrapper .admin-header {
+        display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 15px;
+    }
+    #admin-directorio-wrapper .admin-header h1 {
+        font-size: 2rem;
+    }
+    #admin-directorio-wrapper .admin-controls {
+        display: flex; flex-wrap: wrap; gap: 12px; margin-top: 20px;
+    }
+    #admin-directorio-wrapper #admin-search-input {
+        width: 100%; margin-top: 20px;
+    }
+    #admin-directorio-wrapper .table-wrapper {
+        margin-top: 20px; overflow-x: auto;
+    }
+    #admin-directorio-wrapper table {
+        width: 100%; border-collapse: collapse;
+    }
+    #admin-directorio-wrapper th, #admin-directorio-wrapper td {
+        padding: 15px; border-bottom: 1px solid #ecf0f1; text-align: left; vertical-align: middle;
+        font-size: 1rem;
+    }
+    #admin-directorio-wrapper th {
+        background-color: #f8f9fa; font-weight: 600; color: #34495e;
+    }
+    #admin-directorio-wrapper tbody tr:hover {
+        background-color: #f1f5f9;
+    }
+
+    /* --- Estilos de Inputs y Botones --- */
+    #admin-directorio-wrapper .admin-input {
+        width: 100%; padding: 14px 16px; font-size: 1em; border: 1px solid #dfe6e9;
+        border-radius: 8px; transition: border-color 0.3s, box-shadow 0.3s;
+    }
+    #admin-directorio-wrapper .admin-input:focus {
+        border-color: #007bff; box-shadow: 0 0 0 3px rgba(0, 123, 255, 0.15); outline: none;
+    }
+    #admin-directorio-wrapper .admin-button {
+        padding: 12px 24px; border-radius: 8px; color: white !important; background-color: #007bff;
+        cursor: pointer; font-size: 1em; font-weight: 600; transition: background-color 0.2s, transform 0.2s, box-shadow 0.2s;
+        display: inline-flex; align-items: center; justify-content: center; gap: 8px;
+    }
+    #admin-directorio-wrapper .admin-button:hover {
+        background-color: #0056b3; transform: translateY(-2px); box-shadow: 0 4px 15px rgba(0, 123, 255, 0.2);
+    }
+    #admin-directorio-wrapper .admin-button.login { width: 100%; padding: 16px; font-size: 1.1em; }
+    #admin-directorio-wrapper .admin-button.secondary { background-color: #6c757d; }
+    #admin-directorio-wrapper .admin-button.secondary:hover { background-color: #5a6268; box-shadow: 0 4px 15px rgba(0, 0, 0, 0.15); }
+    #admin-directorio-wrapper .admin-button.danger { background-color: #dc3545; }
+    #admin-directorio-wrapper .admin-button.danger:hover { background-color: #c82333; box-shadow: 0 4px 15px rgba(220, 53, 69, 0.25); }
+    #admin-directorio-wrapper .admin-button:disabled { background-color: #adb5bd; cursor: not-allowed; transform: none; box-shadow: none; }
+    #admin-directorio-wrapper .admin-button .spinner {
+        display: none; width: 16px; height: 16px; border: 2px solid rgba(255,255,255,0.5);
+        border-top-color: white; border-radius: 50%; animation: spin 1s linear infinite;
+    }
+    #admin-directorio-wrapper .admin-button.loading .spinner { display: inline-block; }
+    #admin-directorio-wrapper .admin-button.loading .btn-text { display: none; }
+    @keyframes spin { to { transform: rotate(360deg); } }
+
+    /* --- Modales --- */
+    #admin-directorio-wrapper .dc-modal {
+        display: none; position: fixed; z-index: 1050; left: 0; top: 0; width: 100%; height: 100%; max-width: none;
+        background-color: rgba(0, 0, 0, 0.5); justify-content: center; align-items: center; animation: fadeIn 0.3s ease;
+    }
+    #admin-directorio-wrapper .dc-modal-content {
+        background: white; padding: 35px 40px; border-radius: 12px; width: 90%;
+        max-width: 600px; box-shadow: 0 8px 40px rgba(0, 0, 0, 0.15); animation: slideIn 0.4s ease-out;
+    }
+    #admin-directorio-wrapper .dc-modal-content h2 { font-size: 1.8em; margin-top: 0; margin-bottom: 30px; }
+    #admin-directorio-wrapper .dc-modal-content .form-group { margin-bottom: 20px; }
+    #admin-directorio-wrapper .dc-modal-content label { display: block; margin-bottom: 8px; font-weight: 600; color: #34495e; }
+    #admin-directorio-wrapper .import-section { margin-top: 20px; padding: 20px; border: 2px dashed #dfe6e9; border-radius: 8px; text-align: center; background-color: #f8f9fa; }
+    #admin-directorio-wrapper .dc-modal-actions { display: flex; justify-content: flex-end; gap: 12px; margin-top: 35px; padding-top: 20px; border-top: 1px solid #ecf0f1; }
+    @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+    @keyframes slideIn { from { transform: translateY(-30px); opacity: 0; } to { transform: translateY(0); opacity: 1; } }
+
+    /* --- Notificaciones (Toasts) --- */
+    #admin-directorio-wrapper #notification-container {
+        position: fixed; top: 20px; right: 20px; z-index: 2000; display: flex; flex-direction: column; gap: 10px;
+    }
+    #admin-directorio-wrapper .toast-notification {
+        background-color: #28a745; color: white; padding: 15px 20px; border-radius: 8px;
+        box-shadow: 0 4px 15px rgba(0,0,0,0.1); display: flex; align-items: center; gap: 10px;
+        opacity: 0; transform: translateX(100%); animation: slideInToast 0.5s forwards;
+    }
+    #admin-directorio-wrapper .toast-notification.error { background-color: #dc3545; }
+    #admin-directorio-wrapper .toast-notification.hiding { animation: slideOutToast 0.5s forwards; }
+    @keyframes slideInToast { to { opacity: 1; transform: translateX(0); } }
+    @keyframes slideOutToast { from { opacity: 1; transform: translateX(0); } to { opacity: 0; transform: translateX(100%); } }
+</style>
+
+<!-- 2. ESTRUCTURA HTML -->
+<div id="admin-directorio-wrapper">
+    <!-- Vista de Login -->
+    <div id="admin-login-view">
+        <h2><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512" width="1em" height="1em" fill="currentColor" aria-hidden="true"><path d="M144 144v48H304V144c0-44.2-35.8-80-80-80s-80 35.8-80 80zM80 192V144C80 64.5 144.5 0 224 0s144 64.5 144 144v48h16c35.3 0 64 28.7 64 64V448c0 35.3-28.7 64-64 64H64c-35.3 0-64-28.7-64-64V256c0-35.3 28.7-64 64-64H80z"/></svg> Acceso al Panel</h2>
+        <p>Por favor, inicie sesión para continuar.</p>
+        <div class="login-form-group">
+            <label for="admin-email">Email</label>
+            <input type="email" id="admin-email" class="admin-input" autocomplete="email">
+        </div>
+        <div class="login-form-group">
+            <label for="admin-password">Contraseña</label>
+            <input type="password" id="admin-password" class="admin-input" autocomplete="current-password">
+        </div>
+        <button id="admin-login-btn" class="admin-button login">
+            <span class="btn-text">Entrar</span>
+            <div class="spinner"></div>
+        </button>
+    </div>
+
+    <!-- Vista de Contenido del Panel -->
+    <div id="admin-content-view" style="display: none;">
+        <div class="admin-header">
+            <h1>Panel de Administración del Directorio</h1>
+            <button id="admin-logout-btn" class="admin-button danger"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" width="1em" height="1em" fill="currentColor" aria-hidden="true"><path d="M377.9 105.9L500.7 228.7c7.2 7.2 11.3 17.1 11.3 27.3s-4.1 20.1-11.3 27.3L377.9 406.1c-6.4 6.4-15 9.9-24 9.9c-18.7 0-33.9-15.2-33.9-33.9l0-62.1-128 0c-17.7 0-32-14.3-32-32l0-64c0-17.7 14.3-32 32-32l128 0 0-62.1c0-18.7 15.2-33.9 33.9-33.9c9 0 17.6 3.6 24 9.9zM160 96L96 96c-17.7 0-32 14.3-32 32l0 256c0 17.7 14.3 32 32 32l64 0c17.7 0 32 14.3 32 32s-14.3 32-32 32l-64 0c-53 0-96-43-96-96L0 128C0 75 43 32 96 32l64 0c17.7 0 32 14.3 32 32s-14.3 32-32 32z"/></svg> <span class="btn-text">Cerrar Sesión</span></button>
+        </div>
+        <div class="admin-controls">
+            <button id="add-contact-btn" class="admin-button"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512" width="1em" height="1em" fill="currentColor" aria-hidden="true"><path d="M256 80c0-17.7-14.3-32-32-32s-32 14.3-32 32V224H48c-17.7 0-32 14.3-32 32s14.3 32 32 32H192V432c0 17.7 14.3 32 32 32s32-14.3 32-32V288H400c17.7 0 32-14.3 32-32s-14.3-32-32-32H256V80z"/></svg> <span class="btn-text">Agregar Contacto</span></button>
+            <button id="import-modal-btn" class="admin-button secondary"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" width="1em" height="1em" fill="currentColor" aria-hidden="true"><path d="M288 109.3V352c0 17.7-14.3 32-32 32s-32-14.3-32-32V109.3l-73.4 73.4c-12.5 12.5-32.8 12.5-45.3 0s-12.5-32.8 0-45.3l128-128c12.5-12.5 32.8-12.5 45.3 0l128 128c12.5 12.5 12.5 32.8 0 45.3s-32.8 12.5-45.3 0L288 109.3zM64 352H192c0 35.3 28.7 64 64 64s64-28.7 64-64H448c35.3 0 64 28.7 64 64v32c0 35.3-28.7 64-64 64H64c-35.3 0-64-28.7-64-64V416c0-35.3 28.7-64 64-64z"/></svg> <span class="btn-text">Importar desde TXT</span></button>
+        </div>
+        <input type="text" id="admin-search-input" class="admin-input" placeholder="Filtrar contactos existentes...">
+        <div class="table-wrapper">
+            <table>
+                <thead>
+                    <tr>
+                        <th>Nombre</th><th>Correo</th><th>Teléfono</th><th>Acciones</th>
+                    </tr>
+                </thead>
+                <tbody id="contacts-table-body"></tbody>
+            </table>
+        </div>
+    </div>
+
+    <!-- Modal para Añadir/Editar Contacto -->
+    <div id="contact-form-modal" class="dc-modal">
+        <div class="dc-modal-content">
+            <h2 id="modal-title"></h2>
+            <form id="contact-form" autocomplete="off">
+                <input type="hidden" id="contact-id">
+                <div class="form-group"><label for="nombre">Nombre Completo</label><input type="text" id="nombre" class="admin-input" required></div>
+                <div class="form-group"><label for="correo">Correo Electrónico</label><input type="email" id="correo" class="admin-input"></div>
+                <div class="form-group"><label for="telefono">Teléfono / Anexo</label><input type="text" id="telefono" class="admin-input"></div>
+                <div class="form-group"><label for="unidad">Unidad / Cargo</label><input type="text" id="unidad" class="admin-input"></div>
+                <div class="form-group"><label for="recinto">Recinto</label><input type="text" id="recinto" class="admin-input"></div>
+                <div class="dc-modal-actions">
+                    <button type="button" class="admin-button secondary modal-close-btn">Cancelar</button>
+                    <button type="submit" id="save-contact-btn" class="admin-button"><span class="btn-text">Guardar Cambios</span><div class="spinner"></div></button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- Modal para Importar TXT -->
+    <div id="import-form-modal" class="dc-modal">
+        <div class="dc-modal-content">
+            <h2>Importar desde archivo TXT</h2>
+            <div class="import-section">
+                <label>Seleccionar archivo .txt</label>
+                <p>Formato: `Nombre,Correo,Telefono,Unidad,Recinto` por línea.</p>
+                <input type="file" id="file-import" accept=".txt">
+            </div>
+            <div class="dc-modal-actions">
+                <button type="button" class="admin-button secondary modal-close-btn">Cancelar</button>
+                <button id="import-btn" class="admin-button"><span class="btn-text">Importar</span><div class="spinner"></div></button>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Modal de Confirmación Genérico -->
+    <div id="confirm-modal" class="dc-modal">
+        <div class="dc-modal-content" style="max-width: 450px; text-align: center;">
+            <h2 id="confirm-modal-title">¿Estás seguro?</h2>
+            <p id="confirm-modal-text">Esta acción no se puede deshacer.</p>
+            <div class="dc-modal-actions" style="justify-content: center;">
+                <button type="button" class="admin-button secondary" id="confirm-cancel-btn">Cancelar</button>
+                <button type="button" class="admin-button danger" id="confirm-ok-btn">Sí, eliminar</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Contenedor para Notificaciones -->
+    <div id="notification-container"></div>
+</div>
+
+<!-- 3. JAVASCRIPT (REFACTORIZADO Y MEJORADO) -->
+<script type="module">
+    // Importaciones de Firebase
+    import { initializeApp, getApps } from "https://www.gstatic.com/firebasejs/11.6.0/firebase-app.js";
+    import { getFirestore, collection, onSnapshot, doc, setDoc, addDoc, deleteDoc, query, orderBy, writeBatch } from "https://www.gstatic.com/firebasejs/11.6.0/firebase-firestore.js";
+    import { getAuth, signInWithEmailAndPassword, signOut, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/11.6.0/firebase-auth.js";
+
+    // ADVERTENCIA DE SEGURIDAD: Las claves de Firebase no deben estar expuestas en el cliente.
+    const firebaseConfig = {
+        apiKey: "Aqui_va_tu_api_key",
+        authDomain: "Aqui_va_tu_auth_domain",
+        projectId: "Aqui_va_tu_project_id",
+        storageBucket: "Aqui_va_tu_storage_bucket",
+        messagingSenderId: "Aqui_va_tu_messaging_sender_id",
+        appId: "Aqui_va_tu_app_id"
+    };
+
+    // Inicialización de Firebase (con nombre para evitar conflictos si hay otra instancia)
+    const app = getApps().find(app => app.name === 'directorioAdminApp') || initializeApp(firebaseConfig, "directorioAdminApp");
+    const db = getFirestore(app);
+    const auth = getAuth(app);
+
+    // --- MÓDULO DE UI (MANEJO DEL DOM) ---
+    const UI = {
+        wrapper: document.getElementById('admin-directorio-wrapper'),
+        loginView: document.getElementById('admin-login-view'),
+        contentView: document.getElementById('admin-content-view'),
+        tableBody: document.getElementById('contacts-table-body'),
+        adminSearchInput: document.getElementById('admin-search-input'),
+        contactModal: document.getElementById('contact-form-modal'),
+        importModal: document.getElementById('import-form-modal'),
+        confirmModal: document.getElementById('confirm-modal'),
+        notificationContainer: document.getElementById('notification-container'),
+        
+        // --- Funciones de UI ---
+        toggleLoginView(show) {
+            this.loginView.style.display = show ? 'block' : 'none';
+            this.contentView.style.display = show ? 'none' : 'block';
+        },
+        toggleModal(modal, show) {
+            modal.style.display = show ? 'flex' : 'none';
+        },
+        toggleButtonLoading(button, isLoading) {
+            if (button) {
+                button.disabled = isLoading;
+                button.classList.toggle('loading', isLoading);
+            }
+        },
+        showNotification(message, type = 'success') {
+            const toast = document.createElement('div');
+            toast.className = `toast-notification ${type}`;
+            
+            const successIconSVG = `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" width="1.2em" height="1.2em" fill="currentColor" aria-hidden="true"><path d="M256 512A256 256 0 1 0 256 0a256 256 0 1 0 0 512zM369 209L241 337c-9.4 9.4-24.6 9.4-33.9 0l-64-64c-9.4-9.4-9.4-24.6 0-33.9s24.6-9.4 33.9 0l47 47L335 175c9.4-9.4 24.6-9.4 33.9 0s9.4 24.6 0 33.9z"/></svg>`;
+            const errorIconSVG = `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" width="1.2em" height="1.2em" fill="currentColor" aria-hidden="true"><path d="M256 512A256 256 0 1 0 256 0a256 256 0 1 0 0 512zm0-384c13.3 0 24 10.7 24 24V264c0 13.3-10.7 24-24 24s-24-10.7-24-24V152c0-13.3 10.7-24 24-24zM224 352a32 32 0 1 1 64 0 32 32 0 1 1 -64 0z"/></svg>`;
+            
+            const iconSVG = type === 'success' ? successIconSVG : errorIconSVG;
+            toast.innerHTML = `${iconSVG} ${message}`;
+
+            this.notificationContainer.appendChild(toast);
+            setTimeout(() => {
+                toast.classList.add('hiding');
+                toast.addEventListener('animationend', () => toast.remove());
+            }, 4000);
+        },
+        renderTable(contacts, filter = '') {
+            this.tableBody.innerHTML = '';
+            const lowerCaseFilter = filter.toLowerCase();
+            const filteredContacts = contacts.filter(c => c.nombre.toLowerCase().includes(lowerCaseFilter));
+
+            if (filteredContacts.length === 0 && contacts.length > 0) {
+                const row = this.tableBody.insertRow();
+                row.innerHTML = `<td colspan="4" style="text-align:center;">No se encontraron contactos con ese filtro.</td>`;
+                return;
+            }
+            
+            if (contacts.length === 0) {
+                 const row = this.tableBody.insertRow();
+                 row.innerHTML = `<td colspan="4" style="text-align:center;">No hay contactos en el directorio. ¡Agrega el primero!</td>`;
+                 return;
+            }
+
+            filteredContacts.forEach(contact => {
+                const row = this.tableBody.insertRow();
+                row.innerHTML = `
+                    <td>${contact.nombre}</td>
+                    <td>${contact.correo || 'N/A'}</td>
+                    <td>${contact.telefono || 'N/A'}</td>
+                    <td>
+                        <button class="admin-button edit-btn" data-id="${contact.id}"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" width="1em" height="1em" fill="currentColor" aria-hidden="true"><path d="M410.3 231l11.3-11.3-33.9-33.9-62.1-62.1L291.7 89.8l-11.3 11.3-22.6 22.6L58.6 322.9c-10.4 10.4-18 23.3-22.2 37.4L1 480.7c-2.5 8.4-.2 17.5 6.1 23.7s15.3 8.5 23.7 6.1l120.3-35.4c14.1-4.2 27-11.8 37.4-22.2L387.7 253.7 410.3 231zM160 399.4l-9.1 22.7c-4 3.1-8.5 5.4-13.3 6.9L59.4 452l23-78.1c1.4-4.9 3.8-9.4 6.9-13.3l22.7-9.1v32c0 8.8 7.2 16 16 16h32zM362.7 18.7L348.3 33.2 325.7 55.8 314.3 67.1l33.9 33.9 62.1 62.1 33.9 33.9 11.3-11.3 22.6-22.6 14.5-14.5c25-25 25-65.5 0-90.5L453.3 18.7c-25-25-65.5-25-90.5 0zm-47.4 168l-144 144c-6.2 6.2-16.4 6.2-22.6 0s-6.2-16.4 0-22.6l144-144c6.2-6.2 16.4-6.2 22.6 0s6.2 16.4 0 22.6z"/></svg></button>
+                        <button class="admin-button delete-btn" data-id="${contact.id}"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512" width="1em" height="1em" fill="currentColor" aria-hidden="true"><path d="M135.2 17.7L128 32H32C14.3 32 0 46.3 0 64S14.3 96 32 96H416c17.7 0 32-14.3 32-32s-14.3-32-32-32H320l-7.2-14.3C307.4 6.8 296.3 0 284.2 0H163.8c-12.1 0-23.2 6.8-28.6 17.7zM416 128H32L53.2 467c1.6 25.3 22.6 45 47.9 45H346.9c25.3 0 46.3-19.7 47.9-45L416 128z"/></svg></button>
+                    </td>
+                `;
+            });
+        },
+        showConfirmation(title, text, onConfirm) {
+            this.confirmModal.querySelector('#confirm-modal-title').textContent = title;
+            this.confirmModal.querySelector('#confirm-modal-text').textContent = text;
+            this.toggleModal(this.confirmModal, true);
+
+            const okBtn = this.confirmModal.querySelector('#confirm-ok-btn');
+            const cancelBtn = this.confirmModal.querySelector('#confirm-cancel-btn');
+
+            const handleConfirm = () => {
+                onConfirm();
+                cleanup();
+            };
+            const handleCancel = () => cleanup();
+
+            function cleanup() {
+                okBtn.removeEventListener('click', handleConfirm);
+                cancelBtn.removeEventListener('click', handleCancel);
+                UI.toggleModal(UI.confirmModal, false);
+            }
+
+            okBtn.addEventListener('click', handleConfirm);
+            cancelBtn.addEventListener('click', handleCancel);
+        }
+    };
+
+    // --- MÓDULO DE DATOS (LÓGICA DE FIREBASE) ---
+    const Data = {
+        allContacts: [],
+        unsubscribe: null,
+        loadAllContacts() {
+            const q = query(collection(db, "funcionarios"), orderBy("nombre_lower"));
+            this.unsubscribe = onSnapshot(q, (snapshot) => {
+                this.allContacts = snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
+                UI.renderTable(this.allContacts, UI.adminSearchInput.value);
+            }, (error) => {
+                console.error("Error al cargar contactos: ", error);
+                UI.showNotification("Error al cargar contactos.", "error");
+            });
+        },
+        async saveContact(id, data) {
+            const docRef = id ? doc(db, "funcionarios", id) : doc(collection(db, "funcionarios"));
+            await setDoc(docRef, data, { merge: true });
+        },
+        async deleteContact(id) {
+            await deleteDoc(doc(db, "funcionarios", id));
+        },
+        async importFromTXT(file) {
+            return new Promise((resolve, reject) => {
+                if (!file) { return reject('Por favor, selecciona un archivo .txt'); }
+                const reader = new FileReader();
+                reader.onload = async (e) => {
+                    const lines = e.target.result.split(/\r\n|\n/).filter(line => line.trim());
+                    if (lines.length === 0) return reject('El archivo está vacío.');
+
+                    const batch = writeBatch(db);
+                    lines.forEach(line => {
+                        const [nombre, correo, telefono, unidad, recinto] = line.split(',').map(s => s.trim());
+                        if (nombre) {
+                            const docRef = doc(collection(db, "funcionarios"));
+                            batch.set(docRef, {
+                                nombre, nombre_lower: nombre.toLowerCase(),
+                                correo: correo || '', telefono: telefono || '',
+                                unidad: unidad || '', recinto: recinto || ''
+                            });
+                        }
+                    });
+                    await batch.commit();
+                    resolve({ success: lines.length, total: lines.length });
+                };
+                reader.onerror = () => reject('Error al leer el archivo.');
+                reader.readAsText(file);
+            });
+        }
+    };
+
+    // --- MÓDULO DE AUTENTICACIÓN ---
+    const Auth = {
+        init() {
+            onAuthStateChanged(auth, user => {
+                if (user) {
+                    UI.toggleLoginView(false);
+                    if (!Data.unsubscribe) Data.loadAllContacts();
+                } else {
+                    UI.toggleLoginView(true);
+                    if (Data.unsubscribe) {
+                        Data.unsubscribe();
+                        Data.unsubscribe = null;
+                    }
+                }
+            });
+        },
+        async login(email, pass, button) {
+            UI.toggleButtonLoading(button, true);
+            try {
+                await signInWithEmailAndPassword(auth, email, pass);
+                // No se necesita notificación aquí, el onAuthStateChanged se encarga.
+            } catch (err) {
+                UI.showNotification("Error: Credenciales incorrectas.", "error");
+            } finally {
+                UI.toggleButtonLoading(button, false);
+            }
+        },
+        logout() {
+            signOut(auth);
+        }
+    };
+
+    // --- INICIALIZACIÓN Y MANEJO DE EVENTOS ---
+    function init() {
+        Auth.init(); // Inicia el listener de autenticación
+
+        // Evento de Login
+        UI.wrapper.querySelector('#admin-login-btn').addEventListener('click', () => {
+            const email = UI.wrapper.querySelector('#admin-email').value;
+            const pass = UI.wrapper.querySelector('#admin-password').value;
+            Auth.login(email, pass, UI.wrapper.querySelector('#admin-login-btn'));
+        });
+
+        // Eventos del panel de control
+        UI.wrapper.querySelector('#admin-logout-btn').addEventListener('click', Auth.logout);
+        UI.adminSearchInput.addEventListener('input', () => UI.renderTable(Data.allContacts, UI.adminSearchInput.value));
+        UI.wrapper.querySelector('#add-contact-btn').addEventListener('click', () => openFormModal());
+        UI.wrapper.querySelector('#import-modal-btn').addEventListener('click', () => UI.toggleModal(UI.importModal, true));
+
+        // Eventos de los modales
+        UI.wrapper.querySelectorAll('.modal-close-btn').forEach(btn => {
+            btn.addEventListener('click', () => {
+                UI.toggleModal(UI.contactModal, false);
+                UI.toggleModal(UI.importModal, false);
+            });
+        });
+
+        // Evento de guardado del formulario de contacto
+        UI.wrapper.querySelector('#contact-form').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            const saveBtn = UI.wrapper.querySelector('#save-contact-btn');
+            UI.toggleButtonLoading(saveBtn, true);
+            const id = UI.wrapper.querySelector('#contact-id').value;
+            const nombre = UI.wrapper.querySelector('#nombre').value;
+            const data = {
+                nombre, nombre_lower: nombre.toLowerCase(),
+                correo: UI.wrapper.querySelector('#correo').value,
+                telefono: UI.wrapper.querySelector('#telefono').value,
+                unidad: UI.wrapper.querySelector('#unidad').value,
+                recinto: UI.wrapper.querySelector('#recinto').value,
+            };
+            try {
+                await Data.saveContact(id, data);
+                UI.showNotification("Contacto guardado con éxito.");
+                UI.toggleModal(UI.contactModal, false);
+            } catch (err) {
+                UI.showNotification("Error al guardar el contacto.", "error");
+            } finally {
+                UI.toggleButtonLoading(saveBtn, false);
+            }
+        });
+
+        // Evento de importación de TXT
+        UI.wrapper.querySelector('#import-btn').addEventListener('click', async () => {
+            const importBtn = UI.wrapper.querySelector('#import-btn');
+            UI.toggleButtonLoading(importBtn, true);
+            const file = UI.wrapper.querySelector('#file-import').files[0];
+            try {
+                const result = await Data.importFromTXT(file);
+                UI.showNotification(`${result.success} de ${result.total} contactos importados.`);
+                UI.toggleModal(UI.importModal, false);
+            } catch (err) {
+                UI.showNotification(err, "error");
+            } finally {
+                UI.toggleButtonLoading(importBtn, false);
+            }
+        });
+
+        // Eventos de la tabla (Editar/Eliminar) usando delegación de eventos
+        UI.tableBody.addEventListener('click', (e) => {
+            const editBtn = e.target.closest('.edit-btn');
+            const deleteBtn = e.target.closest('.delete-btn');
+
+            if (editBtn) {
+                const contactId = editBtn.dataset.id;
+                const contact = Data.allContacts.find(c => c.id === contactId);
+                if (contact) openFormModal(contact);
+            }
+            if (deleteBtn) {
+                const contactId = deleteBtn.dataset.id;
+                UI.showConfirmation('Eliminar Contacto', '¿Estás seguro de que quieres eliminar este contacto?', async () => {
+                    try {
+                        await Data.deleteContact(contactId);
+                        UI.showNotification("Contacto eliminado.");
+                    } catch (err) {
+                        UI.showNotification("Error al eliminar el contacto.", "error");
+                    }
+                });
+            }
+        });
+
+        // Función auxiliar para abrir el modal de formulario
+        function openFormModal(contact = {}) {
+            const form = UI.wrapper.querySelector('#contact-form');
+            UI.wrapper.querySelector('#modal-title').textContent = contact.id ? 'Editar Contacto' : 'Agregar Nuevo Contacto';
+            form.reset();
+            form.querySelector('#contact-id').value = contact.id || '';
+            form.querySelector('#nombre').value = contact.nombre || '';
+            form.querySelector('#correo').value = contact.correo || '';
+            form.querySelector('#telefono').value = contact.telefono || '';
+            form.querySelector('#unidad').value = contact.unidad || '';
+            form.querySelector('#recinto').value = contact.recinto || '';
+            UI.toggleModal(UI.contactModal, true);
+        }
+    }
+
+    // --- Iniciar la aplicación ---
+    init();
+</script>
+
+</body>
+</html>
